@@ -1,6 +1,30 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+async function waitForOfflineControl(page: import('@playwright/test').Page) {
+  return page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      await new Promise<void>((resolve, reject) => {
+        const timeout = window.setTimeout(() => reject(new Error('Service worker did not take control')), 5_000);
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          window.clearTimeout(timeout);
+          resolve();
+        }, { once: true });
+      });
+    }
+    const cacheNames = await caches.keys();
+    const entries = (await Promise.all(cacheNames.map(async (name) => {
+      const cache = await caches.open(name);
+      return Promise.all((await cache.keys()).map(async (request) => {
+        const response = await cache.match(request);
+        return [new URL(request.url).pathname, response ? (await response.arrayBuffer()).byteLength : 0] as const;
+      }));
+    }))).flat();
+    return Object.fromEntries(entries);
+  });
+}
+
 test('creates, connects, saves, and reloads a four-panel board', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -26,10 +50,12 @@ test('creates, connects, saves, and reloads a four-panel board', async ({ page }
   await page.getByLabel('Mara Vale').check();
   await page.getByRole('button', { name: 'Save shot' }).click();
   await expect(page.getByText('1 of 4 shots linked')).toBeVisible();
-  await expect(page.getByRole('status').filter({ hasText: /Saved locally|Saving/ }).first()).toBeVisible();
+  await expect(page.locator('#save-status')).toHaveText('Saved locally');
   await page.reload();
   await expect(page.getByRole('heading', { level: 2, name: 'The Brass Key' })).toBeVisible();
   await expect(page.getByText('Original sketch by the table group')).toBeVisible();
+  await expect(page.getByText('Mara turns the key over in her hand.')).toBeVisible();
+  await expect(page.getByText('1 of 4 shots linked')).toBeVisible();
   expect(errors).toEqual([]);
 
   const results = await new AxeBuilder({ page }).analyze();
@@ -37,10 +63,27 @@ test('creates, connects, saves, and reloads a four-panel board', async ({ page }
 });
 
 test('remains usable offline after first load', async ({ page, context }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.goto('/');
-  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.getByRole('button', { name: 'Start a four-panel board' }).click();
+  await page.getByLabel('Project name').fill('Offline Proof');
+  await page.getByRole('button', { name: 'Save project' }).click();
+  await expect(page.locator('#save-status')).toHaveText('Saved locally');
+  const cachedAssets = await waitForOfflineControl(page);
+  expect(cachedAssets['/']).toBeGreaterThan(500);
+  expect(cachedAssets['/assets/app.js']).toBeGreaterThan(10_000);
+  expect(cachedAssets['/assets/app.css']).toBeGreaterThan(10_000);
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Continuity Board' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Offline Proof' })).toBeVisible();
   await expect(page.getByText('Offline · local changes work')).toBeAttached();
+  await page.getByRole('button', { name: 'Add prop' }).click();
+  await page.getByLabel('Prop name').fill('Signal lantern');
+  await page.getByRole('button', { name: 'Save prop' }).click();
+  await expect(page.locator('#save-status')).toHaveText('Saved locally');
+  await page.reload();
+  await expect(page.getByText('Signal lantern')).toBeVisible();
+  expect(errors).toEqual([]);
 });

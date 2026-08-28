@@ -1,4 +1,4 @@
-const VERSION = 'continuity-v3';
+const VERSION = 'continuity-v6';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
@@ -10,7 +10,8 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll(PRECACHE)));
+  const requests = PRECACHE.map((url) => new Request(url, { cache: 'reload' }));
+  event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll(requests)));
 });
 
 self.addEventListener('activate', (event) => {
@@ -26,8 +27,26 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
   if (event.request.mode === 'navigate') {
-    event.respondWith(fetch(event.request).then((response) => { const copy = response.clone(); caches.open(RUNTIME).then((cache) => cache.put(event.request, copy)); return response; }).catch(async () => (await caches.match(event.request)) || (await caches.match('/')) || caches.match('/offline.html')));
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(event.request);
+        if (response.ok) await (await caches.open(RUNTIME)).put(event.request, response.clone());
+        return response;
+      } catch {
+        return (await caches.match(event.request, { ignoreSearch: true, ignoreVary: true })) || (await caches.match('/', { ignoreVary: true })) || (await caches.match('/offline.html', { ignoreVary: true }));
+      }
+    })());
     return;
   }
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => { if (response.ok) { const copy = response.clone(); caches.open(RUNTIME).then((cache) => cache.put(event.request, copy)); } return response; }).catch(() => caches.match('/offline.html'))));
+  event.respondWith((async () => {
+    const cached = await caches.match(event.request, { ignoreVary: true });
+    if (cached) return cached;
+    try {
+      const response = await fetch(event.request);
+      if (response.ok) await (await caches.open(RUNTIME)).put(event.request, response.clone());
+      return response;
+    } catch {
+      return Response.error();
+    }
+  })());
 });

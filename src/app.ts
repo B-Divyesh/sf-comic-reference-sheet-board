@@ -6,7 +6,8 @@ import { loadData, saveData } from './storage';
 const root = document.querySelector<HTMLDivElement>('#app')!;
 let data: AppData = { version: 1, activeProjectId: '', projects: [] };
 let unlocked = cachedUnlock();
-let saveTimer = 0;
+let saveQueue: Promise<void> = Promise.resolve();
+let saveRevision = 0;
 
 const escapeHtml = (value: string) => value.replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]!);
 const activeProject = () => data.projects.find((project) => project.id === data.activeProjectId);
@@ -19,18 +20,16 @@ function announce(message: string, error = false) {
 }
 
 function scheduleSave(message = 'Saved locally') {
-  window.clearTimeout(saveTimer);
+  const project = activeProject();
+  if (project) project.updatedAt = new Date().toISOString();
+  const snapshot = structuredClone(data);
+  const revision = ++saveRevision;
   announce('Saving…');
-  saveTimer = window.setTimeout(async () => {
-    try {
-      const project = activeProject();
-      if (project) project.updatedAt = new Date().toISOString();
-      await saveData(data);
-      announce(message);
-    } catch {
-      announce('Could not save. Export a backup and check browser storage.', true);
-    }
-  }, 180);
+  saveQueue = saveQueue.catch(() => undefined).then(() => saveData(snapshot));
+  void saveQueue.then(
+    () => { if (revision === saveRevision) announce(message); },
+    () => { if (revision === saveRevision) announce('Could not save. Export a backup and check browser storage.', true); }
+  );
 }
 
 function button(label: string, action: string, className = 'button secondary') {
@@ -323,10 +322,11 @@ async function start() {
 
 function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
+  let reloadForAcceptedUpdate = false;
   navigator.serviceWorker.register('/sw.js').then((registration) => {
-    registration.addEventListener('updatefound', () => { const worker = registration.installing; worker?.addEventListener('statechange', () => { if (worker.state === 'installed' && navigator.serviceWorker.controller) { const toast = document.querySelector<HTMLElement>('#toast')!; toast.hidden = false; toast.innerHTML = 'A fresh proof is ready. <button type="button">Update now</button>'; toast.querySelector('button')!.addEventListener('click', () => { worker.postMessage('SKIP_WAITING'); }); } }); });
+    registration.addEventListener('updatefound', () => { const worker = registration.installing; worker?.addEventListener('statechange', () => { if (worker.state === 'installed' && navigator.serviceWorker.controller) { const toast = document.querySelector<HTMLElement>('#toast')!; toast.hidden = false; toast.innerHTML = 'A fresh proof is ready. <button type="button">Update now</button>'; toast.querySelector('button')!.addEventListener('click', () => { reloadForAcceptedUpdate = true; worker.postMessage('SKIP_WAITING'); }); } }); });
   }).catch(() => undefined);
-  navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (reloadForAcceptedUpdate) location.reload(); });
 }
 
 start();
