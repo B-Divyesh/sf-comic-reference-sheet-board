@@ -72,8 +72,10 @@ test('remains usable offline after first load', async ({ page, context }) => {
   await expect(page.locator('#save-status')).toHaveText('Saved locally');
   const cachedAssets = await waitForOfflineControl(page);
   expect(cachedAssets['/']).toBeGreaterThan(500);
-  expect(cachedAssets['/assets/app.js']).toBeGreaterThan(10_000);
-  expect(cachedAssets['/assets/app.css']).toBeGreaterThan(10_000);
+  const cachedJavaScript = Object.entries(cachedAssets).find(([path]) => /^\/assets\/index-[\w-]+\.js$/.test(path));
+  const cachedStyles = Object.entries(cachedAssets).find(([path]) => /^\/assets\/index-[\w-]+\.css$/.test(path));
+  expect(cachedJavaScript?.[1]).toBeGreaterThan(10_000);
+  expect(cachedStyles?.[1]).toBeGreaterThan(10_000);
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Continuity Board' })).toBeVisible();

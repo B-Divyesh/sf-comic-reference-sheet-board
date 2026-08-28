@@ -1,17 +1,25 @@
-const VERSION = 'continuity-v6';
+const VERSION = 'continuity-v7';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
-  '/', '/index.html', '/offline.html', '/manifest.webmanifest', '/icons/icon.svg',
-  '/assets/app.js', '/assets/app.css',
+  '/offline.html', '/manifest.webmanifest', '/icons/icon.svg',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png',
   '/assets/continuity-desk.webp', '/fonts/atkinson-400.woff2', '/fonts/bitter.woff2',
   '/privacy/', '/terms/', '/legal.css'
 ];
 
 self.addEventListener('install', (event) => {
-  const requests = PRECACHE.map((url) => new Request(url, { cache: 'reload' }));
-  event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll(requests)));
+  event.waitUntil((async () => {
+    const cache = await caches.open(SHELL);
+    const indexResponse = await fetch(new Request('/', { cache: 'reload' }));
+    if (!indexResponse.ok) throw new Error('App shell could not be fetched');
+    const html = await indexResponse.clone().text();
+    const builtAssets = [...html.matchAll(/(?:src|href)="(\/assets\/[^"?]+)"/g)].map((match) => match[1]);
+    await cache.put('/', indexResponse.clone());
+    await cache.put('/index.html', indexResponse);
+    const shellUrls = [...new Set([...PRECACHE, ...builtAssets])];
+    await cache.addAll(shellUrls.map((url) => new Request(url, { cache: 'reload' })));
+  })());
 });
 
 self.addEventListener('activate', (event) => {
