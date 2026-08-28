@@ -1,8 +1,9 @@
-const VERSION = 'continuity-v2';
+const VERSION = 'continuity-v3';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
   '/', '/index.html', '/offline.html', '/manifest.webmanifest', '/icons/icon.svg',
+  '/assets/app.js', '/assets/app.css',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png',
   '/assets/continuity-desk.webp', '/fonts/atkinson-400.woff2', '/fonts/bitter.woff2',
   '/privacy/', '/terms/', '/legal.css'

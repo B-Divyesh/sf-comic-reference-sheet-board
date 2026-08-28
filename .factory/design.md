@@ -16,7 +16,7 @@ The compact opening illustration is a sample planning artifact, not simulated pr
 ## Type
 
 - Display: self-hosted **Bitter** variable serif, used for the single h1 and section headings; its sturdy slabs resemble hand-set proof type.
-- Utility/body: self-hosted **Atkinson Hyperlegible Next**, used at 16 px minimum for readable form-heavy work. Tabular numerals appear on panel numbers and counts.
+- Utility/body: self-hosted **Atkinson Hyperlegible**, used at 16 px minimum for readable form-heavy work. Tabular numerals appear on panel numbers and counts.
 - Type scale: 16, 18, 22, 28, clamp(32–48). Long copy is capped at 68 characters.
 
 ## Layout and interaction grammar

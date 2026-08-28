@@ -2,7 +2,7 @@
   "name": "Continuity Board",
   "short_name": "Continuity",
   "description": "Local-first reference and shot planner for short comics and tabletop stories.",
-  "start_url": "/?source=installed&v=2",
+  "start_url": "/?source=installed&v=3",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f3ecd8",
