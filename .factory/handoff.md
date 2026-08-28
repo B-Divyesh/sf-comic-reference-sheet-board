@@ -38,4 +38,6 @@ Commit `5a61fa5` was pushed to `main` and deployed as static deployment `23bf3aa
 
 Fresh live desktop and 390 px Chromium checks each found one h1 and main landmark, correct title, no console/page errors, no normal-load cross-origin requests, zero axe serious/critical violations, a working keyboard skip link, no horizontal overflow, and a successful service-worker-controlled offline reload.
 
+Fresh Lighthouse 12.8.2 on the canonical URL scored 100 Performance / 100 Accessibility / 100 Best Practices / 100 SEO in both mobile and desktop profiles.
+
 The static deployment does not register billing products. The production checkout still returns the documented `404 {"error":"enabled factory product","status":404}`. Before release acceptance, the factory must enable/register the one-time product with slug `comic-reference-sheet-board` in the Sociobot billing engine, then verify that the checkout endpoint redirects to hosted checkout and that its return `?license=` unlocks Studio. Existing invalid-license verification, restore flow, free four-shot workflow, export, privacy behavior, and the paid-unlock client contract remain intact.
