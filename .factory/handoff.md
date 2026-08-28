@@ -28,10 +28,10 @@ npm run build
 
 - `npm test`: 3 Vitest model/import checks and 4 Playwright checks passed across desktop Chromium and a 390 × 844 mobile Chromium profile. The workflow creates a project and reference, links a shot, persists after reload, and passes an axe serious/critical scan. Both profiles also load while `context.setOffline(true)`.
 - `npm run build`: passed; output is exactly `dist/` with `dist/index.html` at its root.
-- Final production assets: 28.60 KB JS (8.91 KB gzip), 18.53 KB CSS (4.88 KB gzip), 51 KB of requested self-hosted fonts, and a 120 KB WebP hero.
-- Lighthouse 12.8.2 mobile, against the final production bundle: Performance **98**, Accessibility **100**, Best Practices **100**, SEO **100**; FCP **1.1 s**, LCP **2.4 s**, CLS **0**, TBT **0 ms**, interactive **2.4 s**.
+- Final production assets: 28.45 KB JS (8.74 KB gzip), 18.47 KB CSS (4.86 KB gzip), 51 KB of requested self-hosted fonts, and a 120 KB WebP hero.
+- Lighthouse 12.8.2 mobile, against the final production bundle: Performance **98**, Accessibility **100**, Best Practices **100**, SEO **100**; FCP **1.2 s**, LCP **2.4 s**, CLS **0**, TBT **0 ms**, interactive **2.4 s**.
 - Factory `verify-url.sh`: HTTP 200, load 766 ms, title and `lang=en` present, exactly one h1, main landmark present, zero images missing alt, zero unlabeled buttons, and zero console/page errors.
-- `npm audit --omit=dev`: 0 production vulnerabilities.
+- `npm audit`: 0 vulnerabilities across production and development dependencies.
 - Direct production-preview checks for `/`, `/privacy/`, `/terms/`, and `/offline.html`: all HTTP 200.
 
 ## Product and privacy notes

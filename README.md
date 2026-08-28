@@ -19,7 +19,7 @@ There is no image generation inside the product, no account, no collaboration se
 
 ## Run and verify
 
-Requires Node.js 20 or newer.
+Requires Node.js 20.19 or newer.
 
 ```sh
 npm ci
