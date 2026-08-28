@@ -110,8 +110,11 @@ test('ships accessible legal pages, local assets, and aligned PWA identity', asy
   expect(deploymentConfig.globalHeaders['Permissions-Policy']).toContain('camera=()');
   expect(deploymentConfig.mimeTypes['.webmanifest']).toBe('application/manifest+json');
   expect(deploymentConfig.routes).toEqual(expect.arrayContaining([
-    expect.objectContaining({ route: '/assets/*', headers: expect.objectContaining({ 'Cache-Control': expect.stringContaining('immutable') }) }),
-    expect.objectContaining({ route: '/sw.js', headers: expect.objectContaining({ 'Cache-Control': expect.stringContaining('no-store') }) })
+    expect.objectContaining({ route: '/assets/index-*', headers: expect.objectContaining({ 'Cache-Control': expect.stringContaining('immutable') }) }),
+    expect.objectContaining({ route: '/sw.js', headers: expect.objectContaining({ 'Cache-Control': expect.stringContaining('no-store') }) }),
+    expect.objectContaining({ route: '/privacy/*', headers: expect.objectContaining({ 'Cache-Control': 'no-cache' }) }),
+    expect.objectContaining({ route: '/terms/*', headers: expect.objectContaining({ 'Cache-Control': 'no-cache' }) }),
+    expect.objectContaining({ route: '/legal.css', headers: expect.objectContaining({ 'Cache-Control': 'no-cache' }) })
   ]));
 
   for (const path of ['/privacy/', '/terms/']) {

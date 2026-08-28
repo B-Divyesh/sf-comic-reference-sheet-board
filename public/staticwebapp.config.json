@@ -20,7 +20,7 @@
   },
   "routes": [
     {
-      "route": "/assets/*",
+      "route": "/assets/index-*",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
@@ -45,6 +45,24 @@
     },
     {
       "route": "/index.html",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/privacy/*",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/terms/*",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/legal.css",
       "headers": {
         "Cache-Control": "no-cache"
       }
