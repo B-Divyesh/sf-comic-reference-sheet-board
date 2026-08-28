@@ -1,10 +1,13 @@
-const VERSION = 'continuity-v8';
+const VERSION = 'continuity-v9';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
   '/offline.html', '/manifest.webmanifest', '/icons/icon.svg',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png',
-  '/assets/continuity-desk.webp', '/fonts/atkinson-400.woff2', '/fonts/bitter.woff2',
+  '/assets/continuity-desk.webp', '/assets/continuity-desk-480.webp',
+  '/assets/continuity-desk-480.avif', '/assets/continuity-desk-960.avif',
+  '/assets/continuity-desk-480.jpg', '/assets/continuity-desk-960.jpg',
+  '/fonts/atkinson-400.woff2', '/fonts/bitter.woff2',
   '/privacy/', '/terms/', '/legal.css'
 ];
 

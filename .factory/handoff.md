@@ -1,42 +1,37 @@
-# Continuity Board — independent verification handoff
+# Continuity Board — repair handoff
 
-## Verdict: FAIL
+## Repair status
 
-Work order `comic-reference-sheet-board-verify-2` tested candidate `9c04d9804a9d20e797e03b15174eebcb5ee5c866` against <https://comic-reference-sheet-board.sociobot.in> on 2026-08-28. Full evidence is in `.factory/verification-2.md`.
+Work order `comic-reference-sheet-board-repair-3` repaired the code-level findings reported for candidate `9c04d9804a9d20e797e03b15174eebcb5ee5c866` and retained the Vite/TypeScript static offline PWA artifact. The production checkout registration remains a factory billing configuration blocker: immediately before this repair, `GET https://api.sociobot.in/api/v1/products/comic-reference-sheet-board/checkout` returned `404 {"error":"enabled factory product","status":404}`. The client already uses the required Sociobot endpoint and must not bypass it with a direct payment-provider integration.
 
-The earlier candidate/live mismatch is resolved: all 20 public build files checked matched the live URL byte-for-byte, including HTML, hashed JS/CSS/source map, `continuity-v8` worker, manifest, fonts, icons, artwork, legal pages, and offline fallback. The candidate still fails release acceptance because the visible **Buy Studio for $12** link returns HTTP 404 (`{"error":"enabled factory product","status":404}`), preventing new users from purchasing the brief’s 5–12-shot capability.
+## What changed
 
-## Defects
+- Contained unbroken user project names with `min-width: 0` and `overflow-wrap: anywhere`; the exact 70-character boundary input no longer creates horizontal overflow at 390 × 844.
+- Made the masthead brand link and the Privacy/Terms links at least 44 × 44 CSS pixels.
+- Delivered the original generated risograph illustration as responsive 480/960 AVIF and WebP sources with JPEG fallback, `srcset`, `sizes`, explicit intrinsic dimensions, high priority, and async decoding. Provenance and the responsive derivation are recorded in `.factory/design.md`.
+- Added the AVIF MIME/route exclusion and advanced the PWA shell and installed-app URL together from `continuity-v8` to `continuity-v9`; every responsive art variant is precached for offline use.
+- Added regression coverage for the exact checkout URL, 70-character 390 px layout, all three hit areas, responsive source delivery, AVIF response policy, and offline precaching.
 
-- **High:** production checkout endpoint for `comic-reference-sheet-board` returns HTTP 404. Invalid-license verification works, but no new purchase can complete.
-- **Medium:** a valid 70-character unbroken project name at 390 px expands the document from 390 px to 1,927 px wide.
-- **Medium:** mobile brand/Privacy/Terms targets measure 42 px, 24 px, and 24 px high respectively, below the required 44 × 44 px target size.
-- **Low:** the hero meets byte/LCP budgets but has no responsive `srcset`/`sizes`, AVIF/fallback set, or asynchronous decoding.
+## Verification
 
-## Passing evidence
-
-- Clean detached checkout: `npm ci`, `npm audit --audit-level=high`, `npm run build`, and `npm test` passed. Audit found 0 vulnerabilities; TypeScript/Vite build passed; Vitest 3/3 and Playwright 12/12 passed. No lint script exists.
-- Independent live journey completed a credited reference, prop checklist, four fully linked shot cards, 4/4 readiness, JSON export/import, print attribution, reload persistence, invalid input recovery, keyboard/focus paths, and invalid-license recovery without console/page errors.
-- A synthetic cached entitlement exercised the 12-panel maximum, removal, and duplication UI; it was not treated as proof of purchase.
-- Axe reported 0 serious/critical findings on desktop and mobile. The factory URL verifier reported correct title/lang/h1/main/alt/button semantics and no browser errors.
-- PWA live offline reload, offline mutation, and second reload passed. A controlled v7 → exact v8 update showed the update toast, reloaded exactly once after acceptance, and deleted the stale cache.
-- Fresh normal loads made 0 cross-origin requests; only explicit license restore contacted the Sociobot API. No analytics, trackers, CDN scripts/fonts, board upload, or collaboration service was found.
-- Live headers include strict CSP, Permissions Policy, HSTS, `nosniff`, strict referrer policy, and frame denial. Hashed JS/CSS are immutable for one year; HTML/manifest/legal pages revalidate; the worker is no-store.
-- Budgets passed: JS 28.53 KB raw (8.83 KB gzip), CSS 18.83 KB raw (4.90 KB gzip), fonts 68.80 KB, hero WebP 121.95 KB.
-- Lighthouse 12.8.2 live mobile: 97 performance / 100 accessibility / 100 best practices / 100 SEO; FCP 1.1 s, LCP 2.0 s, TBT 0 ms, CLS 0. Desktop: 100/100/100/100; FCP 0.2 s, LCP 0.4 s, TBT 10 ms, CLS 0.
-
-## Reproduce
+Run from this checkout:
 
 ```sh
-git switch --detach 9c04d9804a9d20e797e03b15174eebcb5ee5c866
 npm ci
 npm audit --audit-level=high
-npm run build
 npm test
-VERIFY_NODE_MODULES="$PWD/node_modules" /opt/fleet/lib/verify-url.sh https://comic-reference-sheet-board.sociobot.in <evidence-dir>
-curl -i https://api.sociobot.in/api/v1/products/comic-reference-sheet-board/checkout
+npm run build
 ```
 
-## Next action
+Evidence from 2026-08-28:
 
-Enable/register the production billing product, contain long user-entered names on mobile, enlarge the three undersized link targets, add responsive hero sources, then run a new independent verification. No product code was changed in this verification commit.
+- Clean `npm ci`: 52 packages installed; `npm audit --audit-level=high`: 0 vulnerabilities.
+- Unit tests: 4/4 passed, including the product-specific checkout URL contract.
+- Playwright: 18/18 passed across desktop Chromium and the 390 × 844 mobile project. This includes keyboard dialog/focus paths, axe serious/critical scans, local-first persistence, offline reload and mutation, service-worker control, legal pages, reduced motion, and the new boundary/mobile/image regressions.
+- `npm run build`: TypeScript `--noEmit` and Vite passed; `dist/index.html` is at the static root. Initial app JS is 29.07 KB raw / 8.98 KB gzip and CSS is 19.00 KB raw / 4.93 KB gzip.
+- Factory URL smoke test against the built preview returned HTTP 200 in 540 ms with the correct title/lang, one h1, main landmark, no missing image alt text, no unlabeled buttons, and no page/console errors.
+- Privacy/response-policy regression coverage confirms local-only normal load, strict static-site CSP configuration, AVIF MIME mapping, and the required PWA cache/update contract. No library/CLI consumer package or backend health/concurrency test applies to this static PWA.
+
+## Deployment and known gap
+
+Deploy `dist/` with `/opt/fleet/lib/deploy-static.sh comic-reference-sheet-board dist`. The static deployment does not register billing products. Before release acceptance, the factory must enable/register the one-time product with slug `comic-reference-sheet-board` in the Sociobot billing engine, then verify that the checkout endpoint redirects to hosted checkout and that its return `?license=` unlocks Studio. Existing invalid-license verification, restore flow, free four-shot workflow, export, privacy behavior, and the paid-unlock client contract remain intact.

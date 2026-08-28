@@ -58,6 +58,56 @@ test('closes the Studio dialog with an empty required license field', async ({ p
   await expect(openStudio).toBeFocused();
 });
 
+test('keeps the Studio purchase CTA on the product-specific Sociobot checkout contract', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#unlock-dialog a', { hasText: 'Buy Studio for $12' })).toHaveAttribute(
+    'href',
+    'https://api.sociobot.in/api/v1/products/comic-reference-sheet-board/checkout'
+  );
+});
+
+test('contains a maximum-length project name and keeps every required mobile link target usable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Start a four-panel board' }).click();
+  const maximumName = 'A'.repeat(70);
+  await page.getByLabel('Project name').fill(maximumName);
+  await expect(page.getByLabel('Project name')).toHaveValue(maximumName);
+  await page.getByRole('button', { name: 'Save project' }).click();
+
+  const title = page.getByRole('heading', { level: 2, name: maximumName });
+  await expect(title).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBeTruthy();
+  expect(await title.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBeTruthy();
+
+  for (const target of [
+    page.getByRole('link', { name: /Continuity Board/ }),
+    page.getByRole('link', { name: 'Privacy' }),
+    page.getByRole('link', { name: 'Terms' })
+  ]) {
+    const box = await target.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
+test('delivers the opening artwork as responsive AVIF, WebP, and JPEG sources', async ({ page, request }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const art = page.locator('.hero-art');
+  await expect(art.locator('source[type="image/avif"]')).toHaveAttribute('srcset', /continuity-desk-480\.avif 480w.*continuity-desk-960\.avif 960w/);
+  await expect(art.locator('source[type="image/webp"]')).toHaveAttribute('srcset', /continuity-desk-480\.webp 480w.*continuity-desk\.webp 960w/);
+  await expect(art.locator('img')).toHaveAttribute('decoding', 'async');
+  await expect(art.locator('img')).toHaveAttribute('srcset', /continuity-desk-480\.jpg 480w.*continuity-desk-960\.jpg 960w/);
+
+  for (const path of [
+    '/assets/continuity-desk-480.avif', '/assets/continuity-desk-960.avif',
+    '/assets/continuity-desk-480.webp', '/assets/continuity-desk.webp',
+    '/assets/continuity-desk-480.jpg', '/assets/continuity-desk-960.jpg'
+  ]) expect((await request.get(path)).ok()).toBeTruthy();
+});
+
 test('does not reload when the service worker first claims the page', async ({ page }) => {
   let mainFrameNavigations = 0;
   page.on('framenavigated', (frame) => {
@@ -110,6 +160,7 @@ test('ships accessible legal pages, local assets, and aligned PWA identity', asy
   expect(deploymentConfig.globalHeaders['Content-Security-Policy']).toContain("default-src 'self'");
   expect(deploymentConfig.globalHeaders['Permissions-Policy']).toContain('camera=()');
   expect(deploymentConfig.mimeTypes['.webmanifest']).toBe('application/manifest+json');
+  expect(deploymentConfig.mimeTypes['.avif']).toBe('image/avif');
   expect(deploymentConfig.routes).toEqual(expect.arrayContaining([
     expect.objectContaining({ route: '/assets/index-*', headers: expect.objectContaining({ 'Cache-Control': expect.stringContaining('immutable') }) }),
     expect.objectContaining({ route: '/sw.js', headers: expect.objectContaining({ 'Cache-Control': expect.stringContaining('no-store') }) }),

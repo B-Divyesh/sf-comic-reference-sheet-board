@@ -5,7 +5,7 @@
       "/assets/*",
       "/fonts/*",
       "/icons/*",
-      "/*.{css,js,png,jpg,svg,webp,webmanifest,ico,woff2,json,txt,xml,wasm}"
+      "/*.{css,js,png,jpg,avif,svg,webp,webmanifest,ico,woff2,json,txt,xml,wasm}"
     ]
   },
   "globalHeaders": {
@@ -16,7 +16,8 @@
     "X-Frame-Options": "DENY"
   },
   "mimeTypes": {
-    ".webmanifest": "application/manifest+json"
+    ".webmanifest": "application/manifest+json",
+    ".avif": "image/avif"
   },
   "routes": [
     {

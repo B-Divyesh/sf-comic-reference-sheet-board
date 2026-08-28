@@ -93,7 +93,11 @@ function renderEmpty() {
       <p class="privacy-note">No account. Images and notes stay in this browser unless you export them.</p>
     </section>
     <figure class="hero-art">
-      <img src="/assets/continuity-desk.webp" alt="Risograph collage of invented reference cutouts, a key, and four storyboard frames" width="960" height="640" fetchpriority="high" />
+      <picture>
+        <source type="image/avif" srcset="/assets/continuity-desk-480.avif 480w, /assets/continuity-desk-960.avif 960w" sizes="(max-width: 720px) calc(100vw - 48px), 58vw" />
+        <source type="image/webp" srcset="/assets/continuity-desk-480.webp 480w, /assets/continuity-desk.webp 960w" sizes="(max-width: 720px) calc(100vw - 48px), 58vw" />
+        <img src="/assets/continuity-desk-960.jpg" srcset="/assets/continuity-desk-480.jpg 480w, /assets/continuity-desk-960.jpg 960w" sizes="(max-width: 720px) calc(100vw - 48px), 58vw" alt="Risograph collage of invented reference cutouts, a key, and four storyboard frames" width="960" height="640" fetchpriority="high" decoding="async" />
+      </picture>
       <figcaption>A planning still, printed in three imperfect inks.</figcaption>
     </figure>
   </main>`;
