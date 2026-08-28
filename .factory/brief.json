@@ -1,0 +1,10 @@
+{
+  "slug": "comic-reference-sheet-board",
+  "title": "Continuity Board",
+  "territory": "games-creative",
+  "user": "Tabletop groups and hobby comic makers who need to keep character appearance, props, and panel intent consistent across a short story.",
+  "smallest_useful_product": "Local board with character reference slots, named attributes, prop checklist, 4–12 panel shot cards, and print/PDF export.",
+  "artifact_class": "pwa-offline",
+  "monetization": "one-time",
+  "constraints": "Local files by default; no copyrighted character templates; clearly label user-created references; PDF export must preserve attribution fields."
+}
