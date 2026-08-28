@@ -1,4 +1,4 @@
-const VERSION = 'continuity-v7';
+const VERSION = 'continuity-v8';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
