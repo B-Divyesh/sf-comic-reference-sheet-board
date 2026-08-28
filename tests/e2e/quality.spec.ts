@@ -46,6 +46,7 @@ test('closes the Studio dialog with an empty required license field', async ({ p
   await page.getByLabel('Project name').fill('Four-shot limit');
   await page.getByRole('button', { name: 'Save project' }).click();
   await expect(page.locator('#save-status')).toHaveText('Saved locally');
+  await expect(page.locator('[style]')).toHaveCount(0);
 
   const openStudio = page.getByRole('button', { name: 'Add shots with Studio' });
   await openStudio.click();

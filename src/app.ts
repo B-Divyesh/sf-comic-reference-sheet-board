@@ -121,7 +121,7 @@ function renderBoard(project: Project) {
       </header>
       <section class="continuity-meter ${complete ? 'is-complete' : ''}" aria-labelledby="coverage-title">
         <div><p class="eyebrow" id="coverage-title">Reference coverage</p><strong>${linked} of ${project.panels.length} shots linked</strong></div>
-        <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="${project.panels.length}" aria-valuenow="${linked}" aria-label="Panels linked to a reference"><span style="width:${project.panels.length ? linked / project.panels.length * 100 : 0}%"></span></div>
+        <progress class="meter" max="${project.panels.length}" value="${linked}" aria-label="Panels linked to a reference">${linked} of ${project.panels.length}</progress>
         <p>${complete ? 'Every shot has a visual anchor. This sheet is ready to hand off.' : 'Link at least one reference to each shot before export.'}</p>
       </section>
       <section class="board-section references" aria-labelledby="references-title">
