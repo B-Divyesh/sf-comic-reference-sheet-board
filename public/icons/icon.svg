@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Continuity Board app icon">
+  <rect width="512" height="512" rx="64" fill="#f3ecd8"/>
+  <path fill="#006f78" d="M54 56h236v236H54z"/>
+  <path fill="#b53225" d="M222 220h236v236H222z"/>
+  <path fill="#f0dc82" stroke="#25201d" stroke-width="18" d="M101 107h306v298H101z"/>
+  <path fill="none" stroke="#25201d" stroke-width="20" d="M101 256h306M254 107v298"/>
+  <circle cx="254" cy="256" r="25" fill="#fffaf0" stroke="#25201d" stroke-width="14"/>
+</svg>

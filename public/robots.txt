@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://comic-reference-sheet-board.sociobot.in/sitemap.xml
