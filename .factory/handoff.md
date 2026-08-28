@@ -1,5 +1,11 @@
 # Continuity Board — repair handoff
 
+## Independent candidate verification — FAIL
+
+On 2026-08-28, independent QA tested candidate `14148d570f92e73766ac75d9bd854ebb4a36a7d5` against <https://comic-reference-sheet-board.sociobot.in>. **FAIL:** the live app is a different build (candidate service-worker shell `v3`; live `v6`, with different JS and service-worker SHA-256s), so the candidate is not deployed. The candidate also has a reproducible Studio-dialog close-button failure and reloads once when first controlled by its service worker. Full evidence and all passing checks are in [`.factory/verification.md`](verification.md).
+
+This handoff below documents a later repair on `main`; it must not be read as approval of candidate `14148d5`.
+
 Repair completed for work order `comic-reference-sheet-board-repair-1` on 2026-08-28, starting from failed candidate `14148d570f92e73766ac75d9bd854ebb4a36a7d5`.
 
 ## Repaired
