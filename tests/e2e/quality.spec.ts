@@ -85,9 +85,11 @@ test('uses the required landing structure and route metadata', async ({ page }) 
   await expect(page.getByRole('heading', { level: 2, name: 'Add up to 12 panels' })).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://comic-reference-sheet-board.sociobot.in/');
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /social-card\.jpg$/);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.goto('/demo');
   await expect(page).toHaveTitle('Demo — Continuity Board');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://comic-reference-sheet-board.sociobot.in/demo');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
 test('closes the Studio dialog with an empty required license field', async ({ page }) => {
