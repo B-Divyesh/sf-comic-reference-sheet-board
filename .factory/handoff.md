@@ -1,4 +1,4 @@
-# Continuity Board — verification 4 handoff
+# Continuity Board — review 2 handoff
 
 ## Status
 
@@ -6,10 +6,10 @@
 
 - Live URL: <https://comic-reference-sheet-board.sociobot.in>
 - Implementation verified: `de9fb1d3463f307a974389482b60e5c726bdd537`
-- Documentation baseline verified: `0328191a8a05e800b4d0c129069e0455e56001da`
-- Full report: [`.factory/verification-4.md`](verification-4.md)
+- Documentation reviewed: `db04ab06180bac94e7835f1641f7f331c4aadbc5`
+- Full report: [`.factory/review-2.md`](review-2.md)
 
-No product code was changed. This handoff and the verification report are documentation-only changes and do not require a new product image.
+No product code was changed. This handoff and the review report are documentation-only changes and do not require a new product image.
 
 ## What was verified
 
@@ -23,7 +23,7 @@ No product code was changed. This handoff and the verification report are docume
 - Live offline reload and editing passed. Local fixture tests proved install and consent-based update behavior.
 - Privacy, terms, links, metadata, response headers, and the designed HTTP 404 passed.
 - Checkout returned 303 through Sociobot. Invalid-license behavior passed live; valid and revoked behavior passed with deterministic fixtures.
-- Fresh live Lighthouse scored 100/100/100/100 on mobile and desktop.
+- Fresh live Lighthouse 12.8.2 scored 100/100/100/100 on mobile and desktop.
 
 ## Run the checks
 
@@ -38,7 +38,7 @@ Run each `test` value in `.factory/claims.json` to repeat the claim audit. Open 
 
 ## Evidence
 
-Verification evidence is under `/work/.evidence/verify-4/`. The required copies are `/work/.evidence/qa-report.md` and `/work/.evidence/qa-result.json`.
+Review evidence is under `/work/.evidence/review-2/`. The required copies are `/work/.evidence/qa-report.md` and `/work/.evidence/qa-result.json`.
 
 ## Known boundaries
 
