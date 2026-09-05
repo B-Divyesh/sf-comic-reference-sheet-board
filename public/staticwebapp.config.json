@@ -1,13 +1,4 @@
 {
-  "navigationFallback": {
-    "rewrite": "/index.html",
-    "exclude": [
-      "/assets/*",
-      "/fonts/*",
-      "/icons/*",
-      "/*.{css,js,png,jpg,avif,svg,webp,webmanifest,ico,woff2,json,txt,xml,wasm}"
-    ]
-  },
   "globalHeaders": {
     "Content-Security-Policy": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.sociobot.in; manifest-src 'self'; worker-src 'self'; form-action 'self'; upgrade-insecure-requests",
     "Permissions-Policy": "camera=(), geolocation=(), microphone=(), payment=(), usb=()",
@@ -20,6 +11,13 @@
     ".avif": "image/avif"
   },
   "routes": [
+    {
+      "route": "/demo",
+      "rewrite": "/index.html",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
     {
       "route": "/assets/index-*",
       "headers": {
@@ -68,5 +66,11 @@
         "Cache-Control": "no-cache"
       }
     }
-  ]
+  ],
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html",
+      "statusCode": 404
+    }
+  }
 }

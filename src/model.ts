@@ -73,3 +73,56 @@ export function isAppData(value: unknown): value is AppData {
 export function linkedPanelCount(project: Project): number {
   return project.panels.filter((panel) => panel.referenceIds.length > 0).length;
 }
+
+export function makeSampleData(): AppData {
+  const references: Reference[] = [
+    {
+      id: 'demo-ref-mara',
+      name: 'Mara Vale',
+      role: 'Courier',
+      attribution: 'Original character notes for the sample story',
+      attributes: ['Teal coat with brass buttons', 'Short dark curls', 'Red cord holds the brass key']
+    },
+    {
+      id: 'demo-ref-station',
+      name: 'North Gate station',
+      role: 'Location',
+      attribution: 'Original location notes for the sample story',
+      attributes: ['Green tile wall', 'Clock stopped at 8:17', 'Platform sign has a chipped corner']
+    }
+  ];
+  const props: Prop[] = [
+    { id: 'demo-prop-key', name: 'Brass key', details: 'Starts on Mara’s red cord; ends in Ivo’s hand.', checked: true },
+    { id: 'demo-prop-ticket', name: 'Blue ticket', details: 'Folded once before panel 3.', checked: true },
+    { id: 'demo-prop-bag', name: 'Canvas bag', details: 'Stays on Mara’s left shoulder.', checked: false }
+  ];
+  const panels: Panel[] = [
+    {
+      id: 'demo-panel-1', number: 1, shot: 'Wide view', action: 'Mara waits alone under the stopped station clock.',
+      continuity: 'Bag on left shoulder. Key visible against the teal coat.', referenceIds: ['demo-ref-mara', 'demo-ref-station'], propIds: ['demo-prop-key', 'demo-prop-bag']
+    },
+    {
+      id: 'demo-panel-2', number: 2, shot: 'Close-up', action: 'She compares the brass key with the number on her ticket.',
+      continuity: 'Ticket is still flat. Red cord crosses the second coat button.', referenceIds: ['demo-ref-mara'], propIds: ['demo-prop-key', 'demo-prop-ticket']
+    },
+    {
+      id: 'demo-panel-3', number: 3, shot: 'Over Mara’s shoulder', action: 'Ivo reaches across the chipped platform sign for the key.',
+      continuity: 'Ticket is now folded once. Mara still holds the key.', referenceIds: ['demo-ref-mara', 'demo-ref-station'], propIds: ['demo-prop-key', 'demo-prop-ticket']
+    },
+    {
+      id: 'demo-panel-4', number: 4, shot: 'Medium two-shot', action: 'Ivo holds the key while Mara watches the arriving train.',
+      continuity: 'Key has changed hands. Bag remains on Mara’s left shoulder.', referenceIds: ['demo-ref-mara', 'demo-ref-station'], propIds: ['demo-prop-key', 'demo-prop-bag']
+    }
+  ];
+  const project: Project = {
+    id: 'demo-project-lantern',
+    name: 'The Lantern Exchange',
+    logline: 'A courier discovers that the handoff key opens the wrong station locker.',
+    createdAt: '2026-09-05T12:00:00.000Z',
+    updatedAt: '2026-09-05T12:00:00.000Z',
+    references,
+    props,
+    panels
+  };
+  return { version: 1, activeProjectId: project.id, projects: [project] };
+}

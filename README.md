@@ -1,41 +1,50 @@
 # Continuity Board
 
-Continuity Board is a private, local-first reference and shot planner for tabletop groups and hobby comic makers. It keeps visual references, named appearance locks, prop state, and panel intent together before drawing begins, then prints an attribution-bearing handoff sheet.
+Continuity Board helps tabletop groups and hobby comic makers keep appearance, props, and panel intent consistent across a short story.
 
-Live: <https://comic-reference-sheet-board.sociobot.in>
+Live product: <https://comic-reference-sheet-board.sociobot.in>
 
-## What ships
+One-click sample: <https://comic-reference-sheet-board.sociobot.in/demo>
 
-- Multiple browser-local projects, each starting with a four-panel shot strip
-- User-created reference image slots, source/credit fields, and locked attributes
-- Prop checklists and per-panel links to references and props
-- Reorderable 4–12 shot cards with framing, action, and continuity notes
-- JSON backup/import and print/PDF export; both preserve source attribution
-- Installable offline PWA with update notification
-- Optional $12 one-time Studio license for panels 5–12 and project duplication
-- Responsive 390 px layout, full keyboard paths, reduced-motion support, privacy and terms pages
+## What it does
 
-There is no image generation inside the product, no account, no collaboration server, and no analytics. Board data lives in IndexedDB. License state is stored in localStorage and checked with Sociobot at most once per day.
+- A new free board starts with four editable panels.
+- A board tracks appearance references, named attributes, props, and per-panel links.
+- JSON backup exports and restores a board.
+- JSON and print/PDF output include supplied reference credit.
+- The browser keeps multiple local projects and restores them after reload.
+- The board works offline after the first visit and installs as a standalone PWA.
+- An available app update is shown and applied only after confirmation.
+- The board supports a 390 px screen, keyboard use, and reduced motion.
+- A valid $12 one-time Studio license enables panels 5–12 and project duplication.
+
+The product does not generate images, provide copyrighted templates, publish galleries, or run a collaboration server. Normal board use keeps project data in the browser and sends no cross-origin requests.
+
+## Demo safety
+
+Select **Try it with sample data** or open `/demo`. The sample is populated, resets cleanly, and never changes saved projects. It uses page memory instead of the real IndexedDB workspace. See [`.factory/demo.md`](.factory/demo.md).
 
 ## Run and verify
 
-Requires Node.js 20.19 or newer.
+Use Node.js 20.19 or newer. Playwright is pinned to 1.58.2.
 
 ```sh
 npm ci
-npm run dev
-npm test       # Vitest + desktop/mobile Playwright + axe + offline reload
-npm run build  # reproducible static output in ./dist
+npx playwright install chromium # only when the browser is not already installed
+npm test
+npm run build
 npm run preview
 ```
 
-Playwright is pinned to 1.58.2. In a fresh environment, install its Chromium binary with `npx playwright install chromium` if one is not already available.
+`npm test` runs unit tests and desktop/mobile browser tests. The build command type-checks the app and writes the static release to `dist/`.
+
+Every public behavior claim and its clean command is registered in [`.factory/claims.json`](.factory/claims.json). The visual system and original asset provenance are in [`.factory/design.md`](.factory/design.md).
 
 ## Deploy
 
-Deploy the contents of `dist/` as a static site with `index.html` at the root. Do not configure billing, DNS, or infrastructure from this repository. The hosted checkout and license verifier use the product slug, so no product ID or secret is embedded in the client.
+Deploy the contents of `dist/` as a static site. Keep `staticwebapp.config.json` with the release so `/demo`, security headers, caching, and the real 404 response work.
 
-The researched scope is in [`.factory/brief.json`](.factory/brief.json), the visual and asset provenance record is in [`.factory/design.md`](.factory/design.md), and release verification is in [`.factory/handoff.md`](.factory/handoff.md).
+The repository does not manage billing, DNS, or other infrastructure. Checkout and license verification use the Sociobot billing API without an embedded secret.
 
 ## License
 

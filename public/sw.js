@@ -1,9 +1,10 @@
-const VERSION = 'continuity-v9';
+const VERSION = 'continuity-v10';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = [
-  '/offline.html', '/manifest.webmanifest', '/icons/icon.svg',
+  '/offline.html', '/404.html', '/manifest.webmanifest', '/icons/icon.svg',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png',
+  '/icons/apple-touch-icon.png', '/assets/social-card.jpg',
   '/assets/continuity-desk.webp', '/assets/continuity-desk-480.webp',
   '/assets/continuity-desk-480.avif', '/assets/continuity-desk-960.avif',
   '/assets/continuity-desk-480.jpg', '/assets/continuity-desk-960.jpg',
@@ -19,6 +20,7 @@ self.addEventListener('install', (event) => {
     const html = await indexResponse.clone().text();
     const builtAssets = [...html.matchAll(/(?:src|href)="(\/assets\/[^"?]+)"/g)].map((match) => match[1]);
     await cache.put('/', indexResponse.clone());
+    await cache.put('/demo', indexResponse.clone());
     await cache.put('/index.html', indexResponse);
     const shellUrls = [...new Set([...PRECACHE, ...builtAssets])];
     await cache.addAll(shellUrls.map((url) => new Request(url, { cache: 'reload' })));

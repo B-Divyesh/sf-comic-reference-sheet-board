@@ -1,0 +1,121 @@
+[
+  {
+    "id": "demo-isolation",
+    "claim": "The one-click sample is populated, resets cleanly, and never changes saved projects.",
+    "where": "landing action, demo banner, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:demo-isolation",
+    "sandbox": "fresh browser context; create a saved project, enter /demo, edit and reset the sample, then return to the unchanged project"
+  },
+  {
+    "id": "four-panel-start",
+    "claim": "A new free board starts with four editable panels.",
+    "where": "landing facts, pricing, terms, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:four-panel-start",
+    "sandbox": "fresh /demo state; create a new sample project and count editable panel cards"
+  },
+  {
+    "id": "continuity-tracking",
+    "claim": "A board tracks appearance references, named attributes, props, and per-panel links.",
+    "where": "landing preview, how it works, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:continuity-tracking",
+    "sandbox": "fresh /demo sample; inspect populated references, attributes, props, coverage, and panel form links"
+  },
+  {
+    "id": "json-roundtrip",
+    "claim": "JSON backup exports and restores a board.",
+    "where": "pricing, terms, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:json-roundtrip",
+    "sandbox": "fresh /demo sample; download JSON, change the sample workspace, then import the downloaded file and verify restoration"
+  },
+  {
+    "id": "attribution-export",
+    "claim": "JSON and print/PDF output include supplied reference credit.",
+    "where": "reference form, privacy, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:attribution-export",
+    "sandbox": "fresh /demo sample; inspect the downloaded JSON and print-media output for the sample credit"
+  },
+  {
+    "id": "local-private",
+    "claim": "Normal board use keeps project data in the browser and sends no cross-origin requests.",
+    "where": "landing facts, privacy, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:local-private",
+    "sandbox": "fresh /demo context; record every request while editing a panel and prop, then require product-origin requests only"
+  },
+  {
+    "id": "product-boundaries",
+    "claim": "The product has no accounts, image generation, copyrighted templates, public gallery, or collaboration flow.",
+    "where": "landing privacy and limits, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:product-boundaries",
+    "sandbox": "fresh /demo sample; require original sample attribution and verify no account, generation, publishing, gallery, or invitation action exists"
+  },
+  {
+    "id": "offline-reload",
+    "claim": "The board works offline after the first visit.",
+    "where": "landing facts, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:offline-reload",
+    "sandbox": "own fresh browser context at /demo; wait for worker control, go offline, reload, and edit the sample"
+  },
+  {
+    "id": "pwa-install",
+    "claim": "Continuity Board installs as a standalone PWA.",
+    "where": "README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:pwa-install",
+    "sandbox": "own fresh browser context at /demo; require worker control and a standalone manifest with 192, 512, and maskable icons"
+  },
+  {
+    "id": "pwa-update",
+    "claim": "An available app update is shown and applied only after confirmation.",
+    "where": "README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:pwa-update",
+    "sandbox": "own fresh browser context; install the shipped v9 worker fixture, enter /demo, accept the v10 notice, and verify the active worker/cache"
+  },
+  {
+    "id": "studio-license",
+    "claim": "A valid $12 one-time Studio license enables panels 5–12 and project duplication.",
+    "where": "landing pricing, Studio dialog, terms, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:studio-license",
+    "sandbox": "start at /demo, leave for a clean real board, fulfill Sociobot verification with a recorded valid fixture, then add 12 panels and duplicate"
+  },
+  {
+    "id": "checkout-contract",
+    "claim": "Studio checkout uses the product-specific Sociobot billing endpoint and no payment form is embedded.",
+    "where": "Studio dialog, privacy, terms, README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:checkout-contract",
+    "sandbox": "fresh browser context; inspect the rendered Studio purchase destination and require no card input in the product"
+  },
+  {
+    "id": "license-privacy",
+    "claim": "License state stays in localStorage, only the token is sent to Sociobot, and a valid result is cached for one day.",
+    "where": "privacy policy, README billing note",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:license-privacy",
+    "sandbox": "start at /demo, leave for real mode, record a valid Sociobot fixture request, inspect localStorage, reload, and require no second request or card field"
+  },
+  {
+    "id": "license-fallback",
+    "claim": "An inactive Studio license removes paid actions but keeps saved projects and JSON export available.",
+    "where": "terms, Studio behavior",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:license-fallback",
+    "sandbox": "start at /demo, create a five-panel board with a valid fixture, age the cached verdict, return a revoked fixture, and verify project and export access"
+  },
+  {
+    "id": "site-data-clear",
+    "claim": "Clearing browser site data removes saved projects and local license state.",
+    "where": "privacy policy",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:site-data-clear",
+    "sandbox": "start at /demo, create a real saved project and local license state, clear IndexedDB and localStorage, then reload to an empty workspace"
+  },
+  {
+    "id": "multiple-projects",
+    "claim": "The browser keeps multiple local projects and restores them after reload.",
+    "where": "README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:multiple-projects",
+    "sandbox": "start at /demo, leave for a clean real workspace, create two projects, switch, reload, and verify both"
+  },
+  {
+    "id": "accessible-layout",
+    "claim": "The board supports a 390 px screen, keyboard use, and reduced motion.",
+    "where": "README",
+    "test": "npm run test:e2e -- --project=chromium --grep @claim:accessible-layout",
+    "sandbox": "fresh /demo at 390 by 844 with reduced motion; verify reflow, skip focus, named dialog keyboard operation, focus return, and reduced transitions"
+  }
+]
