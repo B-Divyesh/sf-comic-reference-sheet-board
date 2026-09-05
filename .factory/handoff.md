@@ -1,10 +1,23 @@
-# Continuity Board — verification handoff
+# Continuity Board — review handoff
 
-## Status: PASS
+## Status: FAIL
 
-Independent verification work order `comic-reference-sheet-board-verify-3` passed candidate `f979e88f1facfad97afef18fdda68fec126ddb4f` against <https://comic-reference-sheet-board.sociobot.in> on 2026-08-28. The live deployment exactly matches all 25 candidate public build artifacts by SHA-256. The prior production billing 404 is resolved: checkout now returns a 303 to hosted Sociobot/Dodo checkout.
+Review work order `comic-reference-sheet-board-review-1` found 7 issues: 2 high and 5 medium. There are 2 public claims that remain untested end to end. The full evidence and required fixes are in [review-1.md](review-1.md).
 
-## How to verify
+Implementation `5a61fa5d15402549b1722cba9f525d2e4f2c784e` was reviewed against the documentation baseline `6b20a694c78238874369033bb695e027232bc24a` and <https://comic-reference-sheet-board.sociobot.in>. All 25 public build artifacts match the live site. No product code was changed during this review.
+
+## Main blockers
+
+- The required sample sandbox does not exist. `/demo` uses the normal IndexedDB workspace and can change real local data.
+- `.factory/claims.json`, claim-tagged tests, `.factory/demo.md`, and `.factory/copy-audit.md` are absent.
+- The first screen does not name the job and audience in the required h1 and does not provide the required landing structure.
+- All dialogs lack accessible names.
+- The storage-error Reload button is blocked by CSP.
+- There is no real 404 route, and route metadata and the shared legal-page shell are incomplete.
+
+## Verification completed
+
+From a detached clean worktree at the implementation SHA:
 
 ```sh
 npm ci
@@ -13,16 +26,17 @@ npm run build
 npm test
 ```
 
-The clean run had 0 audit vulnerabilities, a successful TypeScript/Vite production build, Vitest 4/4, and Playwright 18/18 across desktop and 390 px mobile. There is no separate lint script. See [verification-3.md](verification-3.md) for exact hashes, browser journey evidence, privacy and header checks, PWA/offline exercise, rate-limit result, and Lighthouse evidence.
+All commands passed: 0 audit vulnerabilities, successful `dist/` build, Vitest 4/4, and Playwright 18/18.
 
-## What is verified
+Fresh live desktop and phone checks covered the empty state, a fully linked four-shot board, local persistence, image validation, JSON export/import recovery, print attribution, multiple projects, 12-panel fixture state, deletion cancellation, offline reload and mutation, keyboard focus, reduced motion, 320/390 px layouts, touch targets, axe, privacy requests, legal links, response headers, checkout, invalid-license recovery, and rate limiting. Lighthouse mobile scored 100 in all four categories, with LCP 1.7 s and CLS 0.
 
-- A user can create a local four-shot board, add a credited reference and prop, link every panel, persist it, export/import JSON, and print attribution-bearing output.
-- Invalid image and JSON inputs recover cleanly; desktop/mobile keyboard, focus, reduced motion, 390 px boundary layout, axe, console/page errors, offline reload/mutation, and bundle budgets pass.
-- Local-only normal browsing, self-hosted assets, CSP/Permissions Policy, legal pages, immutable hashed assets, manifest and versioned worker all pass.
-- Mobile Lighthouse: 97 performance, 100 accessibility, 100 best practices, 100 SEO; LCP 2.1 s, TBT 20 ms, CLS 0.
-- The verify endpoint rate-limited after 30 accepted requests in a 40-request burst; 429 responses supplied `Retry-After: 3`.
+## Evidence
 
-## Known verification boundary
+- Review: [review-1.md](review-1.md)
+- Required copy: `/work/.evidence/qa-report.md`
+- Machine result: `/work/.evidence/qa-result.json`
+- Browser screenshots and Lighthouse JSON: `/work/.evidence/`
 
-No defects remain. A real live worker-version transition and a completed paid checkout return token cannot be created without a new deployment or submitting a purchase; the implementation and safe/non-payment portions of both contracts were checked. This static PWA has no backend persistence, health, concurrency, library, CLI, or sign-in surface to test.
+## Next step
+
+Repair every finding in `review-1.md`, add the missing contract files and claim tests, deploy the repaired implementation, and run a new strict review. Do not use the previous PASS as release evidence for the current factory contract.
