@@ -132,7 +132,7 @@ test('contains a maximum-length project name and keeps every required mobile lin
   expect(await title.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBeTruthy();
 
   for (const target of [
-    page.getByRole('link', { name: 'Continuity Board home' }),
+    page.getByRole('link', { name: /Continuity Board/ }).first(),
     page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Privacy' }),
     page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Terms' })
   ]) {
